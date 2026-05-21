@@ -67,15 +67,30 @@ class Program
 
             if ((command is "all" or "test") && !skipTest)
             {
-                var testProject = Directory.GetFiles(".", "TestCoreLib.csproj", SearchOption.AllDirectories)
-                                           .FirstOrDefault();
-
-                if (testProject != null)
+                // 查找测试 DLL 文件而不是项目文件
+                var testDll = Directory.GetFiles(xunitDir, "TestCoreLib.dll", SearchOption.TopDirectoryOnly)
+                                       .FirstOrDefault();
+                
+                if (testDll != null && File.Exists(testDll))
                 {
-                    await ExecuteAsync("运行单元测试", "dotnet", "test", testProject,
+                    await ExecuteAsync("运行单元测试", "dotnet", "test", testDll,
                         "--configuration", config,
-                        "--no-build",
                         "--logger", "console;verbosity=normal");
+                }
+                else
+                {
+                    WriteWarning($"未找到测试 DLL 文件: {xunitDir}/TestCoreLib.dll");
+                    WriteWarning("请确保 TestCoreLib 项目已成功编译");
+                    
+                    var testProject = Directory.GetFiles(".", "TestCoreLib.csproj", SearchOption.AllDirectories)
+                                               .FirstOrDefault();
+                    if (testProject != null)
+                    {
+                        WriteWarning("尝试直接运行测试项目...");
+                        await ExecuteAsync("运行单元测试（通过项目）", "dotnet", "test", testProject,
+                            "--configuration", config,
+                            "--logger", "console;verbosity=normal");
+                    }
                 }
             }
 
@@ -92,7 +107,7 @@ class Program
             totalTimer.Stop();
 
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"\n全部构建成功完成！");
+            Console.WriteLine($"\n✓ 全部构建成功完成！");
             Console.WriteLine($"库输出目录: {libDir}");
             Console.WriteLine($"测试输出目录: {xunitDir}");
             Console.WriteLine($"总耗时: {totalTimer.Elapsed.TotalSeconds:F2} 秒");
@@ -111,7 +126,7 @@ class Program
         Console.WriteLine($"\n{title}");
         Console.ResetColor();
 
-        var argString = string.Join(" ", arguments);
+        var argString = string.Join(" ", arguments.Select(a => a.Contains(' ') ? $"\"{a}\"" : a));
         Console.WriteLine($"执行: {command} {argString}");
 
         var timer = Stopwatch.StartNew();
@@ -127,8 +142,27 @@ class Program
         };
 
         using var process = Process.Start(psi)!;
-        process.OutputDataReceived += (s, e) => { if (e.Data != null) Console.WriteLine(e.Data); };
-        process.ErrorDataReceived += (s, e) => { if (e.Data != null) Console.Error.WriteLine("ERROR: " + e.Data); };
+
+        var outputLines = new List<string>();
+        var errorLines = new List<string>();
+        
+        process.OutputDataReceived += (s, e) => 
+        { 
+            if (e.Data != null) 
+            {
+                Console.WriteLine(e.Data);
+                outputLines.Add(e.Data);
+            }
+        };
+        
+        process.ErrorDataReceived += (s, e) => 
+        { 
+            if (e.Data != null) 
+            {
+                Console.Error.WriteLine("ERROR: " + e.Data);
+                errorLines.Add(e.Data);
+            }
+        };
 
         process.BeginOutputReadLine();
         process.BeginErrorReadLine();
@@ -144,7 +178,10 @@ class Program
         }
         else
         {
-            throw new Exception($"{command} 执行失败，退出码: {process.ExitCode}");
+            var errorMsg = $"{command} 执行失败，退出码: {process.ExitCode}";
+            if (errorLines.Any())
+                errorMsg += $"\n错误详情: {string.Join("\n", errorLines.Take(5))}";
+            throw new Exception(errorMsg);
         }
     }
 
@@ -169,14 +206,14 @@ class Program
     static void WriteWarning(string message)
     {
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine($"{message}");
+        Console.WriteLine($"⚠ {message}");
         Console.ResetColor();
     }
 
     static void WriteError(string message)
     {
         Console.ForegroundColor = ConsoleColor.Red;
-        Console.Error.WriteLine($"{message}");
+        Console.Error.WriteLine($"✗ {message}");
         Console.ResetColor();
     }
 }
