@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreLib", "CoreLib\CoreLib.csproj", "{7042CB8E-4484-4095-BF9E-EA8B81E6FA06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCoreLib", "TestCoreLib\TestCoreLib.csproj", "{DD5036BB-A90B-46A0-8423-C7723FDE712B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7042CB8E-4484-4095-BF9E-EA8B81E6FA06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7042CB8E-4484-4095-BF9E-EA8B81E6FA06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7042CB8E-4484-4095-BF9E-EA8B81E6FA06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7042CB8E-4484-4095-BF9E-EA8B81E6FA06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD5036BB-A90B-46A0-8423-C7723FDE712B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD5036BB-A90B-46A0-8423-C7723FDE712B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD5036BB-A90B-46A0-8423-C7723FDE712B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD5036BB-A90B-46A0-8423-C7723FDE712B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
