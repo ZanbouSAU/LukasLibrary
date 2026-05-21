@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>CoreLib</Title>
+        <Authors>Lukas F. Kmentt</Authors>
+        <Description>This is a dotnet core library.</Description>
+        <Copyright>Copyright (C) 2026 by Lukas F. Kmentt</Copyright>
+        <RepositoryUrl>https://git.lukas-au.org/Library/CoreLib</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>CoreLib</PackageTags>
+        <PackageReleaseNotes>1.0.0</PackageReleaseNotes>
+        <Company>Lukas F. Kmentt</Company>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <FileVersion>1.0.0</FileVersion>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>CoreLib.snk</AssemblyOriginatorKeyFile>
+        <PackageLicenseUrl>https://licenses.lukas-au.org/Library/CoreLib</PackageLicenseUrl>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <PackageProjectUrl>https://projects.lukas-au.org/Library/CoreLib</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DocumentationFile>bin\Release\net10.0\CoreLib.xml</DocumentationFile>
+    </PropertyGroup>
+
+</Project>
